@@ -27,6 +27,12 @@ for i in $(seq 1 $container_count); do
     # Set the container name
     container_name="rivalz_auto_$i"
 
+    # Check if the container already exists
+    if docker ps -a --format '{{.Names}}' | grep -q "^$container_name$"; then
+        echo "Container $container_name already exists. Skipping..."
+        continue
+    fi
+
     # Create or replace the Dockerfile with the specified content
     cat <<EOL > Dockerfile
 FROM ubuntu:latest
@@ -44,8 +50,6 @@ RUN npm install -g npm
 
 # Install the rivalz-node-cli package globally using npm
 RUN npm install -g rivalz-node-cli@latest
-
-
 EOL
 
     # Add proxy configuration to Dockerfile
@@ -103,22 +107,11 @@ EOL
     # Build the Docker image
     docker build -t $container_name .
 
-    # Run the Docker container with --cap-add=NET_ADMIN
+    # Run the Docker container interactively with --cap-add=NET_ADMIN
+    echo -e "\e[32mStarting container $container_name...\e[0m"
     docker run -it --cap-add=NET_ADMIN --name $container_name $container_name
 
-    # Prompt the user to detach
-    echo -e "\e[32mYou are now attached to $container_name. Detach manually by pressing CTRL+P followed by CTRL+Q.\e[0m"
-
-    # Wait for the user to detach before proceeding to the next container
-    while true; do
-        # Check if the container is still running
-        if ! docker ps -q -f name=$container_name > /dev/null; then
-            break
-        fi
-        sleep 1
-    done
-
-    echo -e "\e[33m$container_name detached. Proceeding to the next container...\e[0m"
+    echo -e "\e[33mExited container $container_name. Proceeding to the next container...\e[0m"
 done
 
-echo "All containers have been created and are ready to use."
+echo "All containers have been created and run interactively."
