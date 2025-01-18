@@ -49,7 +49,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \\
 RUN npm install -g npm
 
 # Install the rivalz-node-cli package globally using npm
-RUN npm install -g rivalz-node-cli@latest
+RUN npm install -g rivalz-node-cli@3.0.1
 EOL
 
     # Add proxy configuration to Dockerfile
