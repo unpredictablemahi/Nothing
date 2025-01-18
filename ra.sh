@@ -52,7 +52,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y curl redsocks iptables iproute2 jq nano
 
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs
-RUN npm install -g npm && npm install -g rivalz-node-cli@latest
+RUN npm install -g npm && npm install -g rivalz-node-cli@3.0.1
 EOL
 
     # Add redsocks configuration file based on authentication
